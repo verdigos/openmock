@@ -5,9 +5,9 @@ import (
 	"github.com/streadway/amqp"
 )
 
-const rabbitContentType = "application/octet-stream"
+const rabbitDefaultContentType = "application/octet-stream"
 
-func publishToAMQP(amqpURL string, exchange string, routingKey string, payload string) {
+func publishToAMQP(amqpURL string, exchange string, routingKey string, payload string, contentType string, correlationId string) {
 	var err error
 
 	defer func() {
@@ -27,14 +27,19 @@ func publishToAMQP(amqpURL string, exchange string, routingKey string, payload s
 		return
 	}
 
+	if len(contentType) == 0 {
+		contentType = rabbitDefaultContentType
+	}
+
 	err = ch.Publish(
 		exchange,   // exchange
 		routingKey, // routing key
 		false,      // mandatory
 		false,      // immediate
 		amqp.Publishing{
-			ContentType: rabbitContentType,
-			Body:        []byte(payload),
+			ContentType:   contentType,
+			Body:          []byte(payload),
+			CorrelationId: correlationId,
 		})
 	if err != nil {
 		logrus.Errorf("%s: %s", "failed to publish message", err)

@@ -191,6 +191,8 @@ type ActionPublishAMQP struct {
 	RoutingKey      string `yaml:"routing_key,omitempty"`
 	Payload         string `yaml:"payload,omitempty"`
 	PayloadFromFile string `yaml:"payload_from_file,omitempty"`
+	ContentType     string `yaml:"content_type,omitempty"`
+	CorrelationId   string `yaml:"correlation_id,omitempty"`
 }
 
 // ActionPublishKafka represents publish kafka action

@@ -56,6 +56,16 @@ func TestTemplateRender(t *testing.T) {
 		`)
 	})
 
+	t.Run("test correlationId render", func(t *testing.T) {
+		raw := `{{ gJsonPath "operation_id" .AMQPPayload }}`
+		c := Context{
+			AMQPPayload: `{"operation_id": "t1234"}`,
+		}
+		r, err := c.Render(raw)
+		assert.NoError(t, err)
+		assert.Equal(t, "t1234", r)
+	})
+
 	t.Run("nil http body", func(t *testing.T) {
 		raw := `
 			{
