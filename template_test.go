@@ -66,6 +66,19 @@ func TestTemplateRender(t *testing.T) {
 		assert.Equal(t, "t1234", r)
 	})
 
+	t.Run("test amqpProperties", func(t *testing.T) {
+		raw := `{{ index .AMQPProperties "correlation_id" }}`
+		c := Context{
+			AMQPPayload: `{"operation_id": "t1234"}`,
+			AMQPProperties: map[string]interface{}{
+				"correlation_id": "t12345",
+			},
+		}
+		r, err := c.Render(raw)
+		assert.NoError(t, err)
+		assert.Equal(t, "t12345", r)
+	})
+
 	t.Run("nil http body", func(t *testing.T) {
 		raw := `
 			{

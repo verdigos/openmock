@@ -225,10 +225,21 @@ func (a ActionPublishAMQP) Perform(ctx Context) error {
 		newOmLogger(ctx).WithField("err", err).Error("failed to render correlation id for amqp")
 		return err
 	}
+	routingKey, err := ctx.Render(a.RoutingKey)
+	if err != nil {
+		newOmLogger(ctx).WithField("err", err).Error("failed to render routing key for amqp")
+		return err
+	}
+	exchange, err := ctx.Render(a.Exchange)
+	if err != nil {
+		newOmLogger(ctx).WithField("err", err).Error("failed to render exchange for amqp")
+		return err
+	}
+
 	publishToAMQP(
 		ctx.om.AMQPURL,
-		a.Exchange,
-		a.RoutingKey,
+		exchange,
+		routingKey,
 		msg,
 		a.ContentType,
 		correlationId,

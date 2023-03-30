@@ -33,6 +33,7 @@ type Context struct {
 	AMQPRoutingKey string
 	AMQPQueue      string
 	AMQPPayload    string
+	AMQPProperties map[string]interface{}
 
 	Values map[string]interface{}
 

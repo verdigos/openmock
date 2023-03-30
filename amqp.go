@@ -106,7 +106,12 @@ func startWorker(om *OpenMock, amqp ExpectAMQP, ms MocksArray) {
 
 			ms.DoActions(Context{
 				AMQPPayload: string(msg.Body),
-				om:          om,
+				AMQPProperties: map[string]interface{}{
+					"reply_to":       msg.ReplyTo,
+					"correlation_id": msg.CorrelationId,
+					"exchange":       msg.Exchange,
+				},
+				om: om,
 			})
 		}
 
